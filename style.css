@@ -1,0 +1,62 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+body {
+    background-image: url("assets/image/bgParking.jpg");
+    background-size: 100%;
+}
+
+.wrapper {
+    margin: 2% 34%;
+    width: 32%;
+}
+
+.memory-game {
+    display: grid;
+    grid-template: repeat(4, 150px)/repeat(4, 110px);
+    justify-content: space-around;
+    row-gap: 2%;
+    padding: 2% 0;
+}
+
+.card {
+    position: relative;
+    perspective: 100px;
+    transition: 0.8s;
+    transform-style: preserve-3d;
+}
+
+.card:active {
+    transform: scale(0.9);
+    transition: ease-in .5s;
+}
+
+.flip {
+    transform: rotateY(180deg);
+    transform-style: preserve-3d;
+    transition: 0.8s;
+}
+
+.card_front,
+.card_back {
+    border: 2px solid white;
+    position: absolute;
+    width: 110px;
+    height: 150px;
+    backface-visibility: hidden;
+    border: 2px solid white;
+}
+
+.card_front {
+    transform: rotateY(0deg);
+}
+
+.card_back {
+    object-fit: contain;
+    background-color: rgba(20, 20, 20, .4);
+    transform: rotateY(180deg);
+}
