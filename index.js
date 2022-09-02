@@ -115,7 +115,12 @@ function restartGame() {
 function startGame() {
     sectionContentElement.forEach(card => card.addEventListener('click', flipCard));
 };
-
+/*
+function showModalWindowStartGame() {
+    const parentElement = document.querySelector('.wrapper');
+    parentElement.insertAdjacentHTML('afterbegin', `<div class="modal"></div>`)
+}*/
+//showModalWindowStartGame()
 startGame();
 
 /*
