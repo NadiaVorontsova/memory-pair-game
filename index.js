@@ -50,7 +50,7 @@ function createCardElement(car) {
     </div>`
     )
 };
-
+/*
 const sectionContentElement = document.querySelectorAll('.card');
 
 let hasFlipped = false;
@@ -115,63 +115,62 @@ function restartGame() {
 function startGame() {
     sectionContentElement.forEach(card => card.addEventListener('click', flipCard));
 };
+function showModalWindowStartGame() {
+const parentElement = document.querySelector('.wrapper');
+parentElement.insertAdjacentHTML('afterbegin', `<div class="modal"></div>`)
+}
+//showModalWindowStartGame()
+//startGame();*/
+
+
+////////////////NEW///////////////////----------------------////////////////
+let first, second;
+let lock = false;
+let clickedCardsArray = [];
+
+const eventClick = sectionElement.addEventListener("click", ({ target }) => {
+    flipCard(target.closest('.card'));
+
+    clickedCardsArray.push(target.closest('.card'))
+
+    first = clickedCardsArray[0];
+    second = clickedCardsArray[1];
+
+    if (clickedCardsArray.length == 2) {
+        matchCards();
+    };
+});
+
+function flipCard(clickedElement) {
+    if (lock) return;
+    clickedElement.classList.add('flip');
+};
+
+function matchCards() {
+    first.dataset.cardBrand === second.dataset.cardBrand ? disableDuplicateCards() : flipCardBack();
+};
+
+function flipCardBack() {
+    lock = true;
+    setTimeout(() => {
+        first.classList.remove('flip');
+        second.classList.remove('flip');
+        lock = false;
+        clickedCardsArray = [];
+    }, 800);
+}
+
+function disableDuplicateCards() {
+    first.removeEventListener('click', eventClick);
+    second.removeEventListener('click', eventClick);
+    clickedCardsArray = [];
+};
+
 /*
 function showModalWindowStartGame() {
     const parentElement = document.querySelector('.wrapper');
     parentElement.insertAdjacentHTML('afterbegin', `<div class="modal"></div>`)
 }*/
 //showModalWindowStartGame()
-startGame();
+//startGame();
 
-/*
-function flipCard(clickedElement) {
-    clickedElement.classList.add('flip');
-};*/
-
-//let storageDataSet = [];
-/*
-sectionElement.addEventListener("click", ({ target }) => {
-    target.closest('.card').classList.add('flip');
-    
-    let clickedCardsArray = document.querySelectorAll(".flip");
-    console.log(clickedCardsArray)
-
-
-    if (clickedCardsArray.length === 2) {
-        if (clickedCardsArray[0].dataset.cardBrand ===
-            clickedCardsArray[1].dataset.cardBrand) {
-                clickedCardsArray.forEach((card) =>{
-                card.removeEventListener('click',target)
-            }
-            )
-        } else {
-            console.log('wrong')
-
-            clickedCardsArray.forEach((card) =>
-                setTimeout(() => card.classList.remove('flip'), 1000)
-            )
-        }
-        
-    }
-
-    /*
-    if (clickedCardsArray.length == 2) {
-        setTimeout(() => {
-            matchCards();
-        }, 1500);
-    }
-
-});
-
-//console.log(storageDataSet)
-/*
-function matchCards() {
-    if (storageDataSet[0] === storageDataSet[1]) {
-        clickedCardsArray[0].classList.remove('flip');
-        clickedCardsArray[1].classList.remove('flip');
-    }else{
-        flipCard(clickedCardsArray[0]);
-        flipCard(clickedCardsArray[1]);
-    }
-    console.log('g');
-};*/
