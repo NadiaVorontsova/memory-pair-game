@@ -131,7 +131,7 @@ let clickedCardsArray = [];
 const eventClick = sectionElement.addEventListener("click", ({ target }) => {
     flipCard(target.closest('.card'));
 
-    clickedCardsArray.push(target.closest('.card'))
+    clickedCardsArray.push(target.closest('.card'));
 
     first = clickedCardsArray[0];
     second = clickedCardsArray[1];
@@ -143,7 +143,8 @@ const eventClick = sectionElement.addEventListener("click", ({ target }) => {
 
 function flipCard(clickedElement) {
     if (lock) return;
-    clickedElement.classList.add('flip');
+
+    clickedElement.classList.add('flip','disableCard');
 };
 
 function matchCards() {
@@ -153,8 +154,8 @@ function matchCards() {
 function flipCardBack() {
     lock = true;
     setTimeout(() => {
-        first.classList.remove('flip');
-        second.classList.remove('flip');
+        first.classList.remove('flip','disableCard');
+        second.classList.remove('flip','disableCard');
         lock = false;
         clickedCardsArray = [];
     }, 800);
