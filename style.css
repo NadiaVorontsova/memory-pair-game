@@ -58,7 +58,7 @@ body {
 }
 
 .disableCard {
-   
+   pointer-events: none;
 }
 
 .card_front,
