@@ -1,4 +1,4 @@
-const sectionElement = document.querySelector('.memory-game');
+const sectionElement = document.querySelector(".memory-game");
 
 const carCards = [{
     brand: "audi",
@@ -27,124 +27,55 @@ const carCards = [{
 }];
 
 let sortedCards = [];
-const countOfCards = 16;
 
-function mixCards() {
-    const duplicateCards = [...carCards, ...carCards];
-    sortedCards = duplicateCards.sort(function () {
-        return 0.5 - Math.random()
-    });
-};
+const mixCards = (carCards) => (sortedCards = carCards.sort(() => 0.5 - Math.random()));
+mixCards([...carCards, ...carCards]);
 
-mixCards();
+sortedCards.forEach((car) => createCardElement(car));
 
-sortedCards.forEach(car =>
-    createCardElement(car)
-);
-
-function createCardElement(car) {
-    return sectionElement.insertAdjacentHTML('beforeend', `
-    <div class="card" data-card-brand=${car.brand}>
+function createCardElement({ brand, image }) {
+    return sectionElement.insertAdjacentHTML("beforeend", `
+    <div class="card" data-card-brand=${brand}>
         <img src="assets/image/front-bg-flipper.jpeg" alt="car" class="card_front">
-        <img src=${car.image} alt=${car.brand} class="card_back">
+        <img src=${image} alt=${brand} class="card_back">
     </div>`
     )
 };
-/*
-const sectionContentElement = document.querySelectorAll('.card');
 
-let hasFlipped = false;
-let lock = false;
-let firstCard, secondCard;
-
-function flipCard() {
-    if (lock) return;
-    if (this === firstCard) return;
-
-    this.classList.add('flip');
-
-    if (!hasFlipped) {
-        hasFlipped = true;
-        firstCard = this;
-        return;
-    }
-
-    secondCard = this;
-    checkMatchCards();
-
-    const turnedCards = document.querySelectorAll(".flip");
-
-    if (turnedCards.length === countOfCards) {
-        restartGame();
-    }
-};
-
-function disableDuplicateCards() {
-    firstCard.removeEventListener('click', flipCard);
-    secondCard.removeEventListener('click', flipCard);
-    resetChosenCards();
-};
-
-function flipCardBack() {
-    lock = true;
-    setTimeout(() => {
-        firstCard.classList.remove('flip');
-        secondCard.classList.remove('flip');
-        resetChosenCards();
-    }, 800);
-};
-
-function checkMatchCards() {
-    firstCard.dataset.cardBrand === secondCard.dataset.cardBrand ? disableDuplicateCards() : flipCardBack();
-};
-
-function resetChosenCards() {
-    hasFlipped = false;
-    lock = false;
-    firstCard = null;
-    secondCard = null;
-};
-
-function restartGame() {
-    sectionContentElement.forEach(card => {
-        card.classList.remove('flip');
-        startGame();
-    })
-};
-
-function startGame() {
-    sectionContentElement.forEach(card => card.addEventListener('click', flipCard));
-};
-function showModalWindowStartGame() {
-const parentElement = document.querySelector('.wrapper');
-parentElement.insertAdjacentHTML('afterbegin', `<div class="modal"></div>`)
-}
-//showModalWindowStartGame()
-//startGame();*/
-
-
-////////////////NEW///////////////////----------------------////////////////
 let first, second;
 let lock = false;
 let clickedCardsArray = [];
 
-const eventClick = sectionElement.addEventListener("click", ({ target }) => {
-    flipCard(target.closest('.card'));
+function startGame() {
+    sectionElement.addEventListener("click", ({ target }) => {
+        if (target.closest(".card") == null || target.closest(".card") == undefined)
+            return;
 
-    clickedCardsArray.push(target.closest('.card'));
+        flipCard(target.closest(".card"));
+        clickedCardsArray.push(target.closest(".card"));
 
-    first = clickedCardsArray[0];
-    second = clickedCardsArray[1];
+        first = clickedCardsArray[0];
+        second = clickedCardsArray[1];
 
-    if (clickedCardsArray.length == 2) {
-        matchCards();
-    };
-});
+        if (clickedCardsArray.length == 2) {
+            matchCards();
+        };
+    });
+};
+
+startGame();
+
+const countOfCards = 16;
+let turnedCards = [];
 
 function flipCard(clickedElement) {
     if (lock) return;
+    clickedElement.classList.add("flip", "disableCard");
 
-    clickedElement.classList.add('flip','disableCard');
+    turnedCards = document.querySelectorAll(".flip");
+    if (turnedCards.length === countOfCards) {
+        showModalWindowStartGame();
+    }
 };
 
 function matchCards() {
@@ -154,24 +85,44 @@ function matchCards() {
 function flipCardBack() {
     lock = true;
     setTimeout(() => {
-        first.classList.remove('flip','disableCard');
-        second.classList.remove('flip','disableCard');
+        first.classList.remove("flip", "disableCard");
+        second.classList.remove("flip", "disableCard");
         lock = false;
         clickedCardsArray = [];
     }, 800);
 }
 
 function disableDuplicateCards() {
-    first.removeEventListener('click', eventClick);
-    second.removeEventListener('click', eventClick);
+    first.removeEventListener('click', startGame);
+    second.removeEventListener('click', startGame);
     clickedCardsArray = [];
 };
 
-/*
-function showModalWindowStartGame() {
+function createModalWindowStartGame() {
     const parentElement = document.querySelector('.wrapper');
-    parentElement.insertAdjacentHTML('afterbegin', `<div class="modal"></div>`)
-}*/
-//showModalWindowStartGame()
-//startGame();
+    parentElement.insertAdjacentHTML('afterbegin', `
+    <div class="modal">
+        <div class="modal_title"> My congratulations! </div>
+        <p class="modal_text"> You won the game and found all pair of car brands </p>
+        <button class="modal_btn">Restart game</button>
+    </div>`
+    )
+    const btn = document.querySelector(".modal_btn");
+    btn.addEventListener("click", restartGame);
+};
 
+createModalWindowStartGame();
+
+const modal = document.querySelector(".modal");
+
+function restartGame() {
+    modal.classList.remove("modal_show");
+    turnedCards.forEach(card => {
+        card.classList.remove("flip", "disableCard");
+        startGame();
+    })
+};
+
+function showModalWindowStartGame() {
+    modal.classList.add("modal_show");
+}
